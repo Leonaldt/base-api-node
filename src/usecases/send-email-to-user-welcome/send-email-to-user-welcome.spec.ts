@@ -1,4 +1,4 @@
-import { SendEmailToUserWithBonus } from './send-email-to-user-with-bonus'
+import { SendEmailToUserWelcome } from './send-email-to-user-welcome'
 import { EmailService, EmailOptions } from '../ports/email-service'
 import { Either, left, Left, right, Right } from '../../shared/either'
 import { MailServiceError } from '../errors/mail-service-error'
@@ -36,29 +36,29 @@ class MailServiceStub implements EmailService {
   }
 }
 
-const makeSut = (): { sut: SendEmailToUserWithBonus, mailServiceStub: MailServiceStub } => {
+const makeSut = (): { sut: SendEmailToUserWelcome, mailServiceStub: MailServiceStub } => {
   const mailServiceStub = new MailServiceStub()
-  const sut = new SendEmailToUserWithBonus(mailOptions, mailServiceStub)
+  const sut = new SendEmailToUserWelcome(mailOptions, mailServiceStub)
   return { sut, mailServiceStub }
 }
 
 describe('Send email to user with bonus use case', () => {
   test('should not email user with invalid email address', async () => {
     const { sut } = makeSut()
-    const result = await sut.sendEmailToUserWithBonus({ name: toName, email: 'invalid_email' })
+    const result = await sut.sendEmailToUserWelcome({ name: toName, email: 'invalid_email' })
     expect(result).toBeInstanceOf(Left)
   })
 
   test('should email user with attachment', async () => {
     const { sut } = makeSut()
-    const result = await sut.sendEmailToUserWithBonus({ name: toName, email: toEmail })
+    const result = await sut.sendEmailToUserWelcome({ name: toName, email: toEmail })
     expect(result).toBeInstanceOf(Right)
   })
 
   test('should raise error when email service fails', async () => {
     const { sut, mailServiceStub } = makeSut()
     jest.spyOn(mailServiceStub, 'send').mockReturnValueOnce(Promise.resolve(left(new MailServiceError())))
-    const result = await sut.sendEmailToUserWithBonus({ name: toName, email: toEmail })
+    const result = await sut.sendEmailToUserWelcome({ name: toName, email: toEmail })
     expect(result.value).toBeInstanceOf(MailServiceError)
   })
 })

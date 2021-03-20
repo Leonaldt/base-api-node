@@ -1,7 +1,6 @@
 import { UserRepository } from '../../../usecases/ports/user-repository'
 import { UserData } from '../../../entities/user/user-data'
 import { MongoHelper } from './helpers/mongo-helper'
-
 export class MongodbUserRepository implements UserRepository {
   async findAllUsers (): Promise<UserData[]> {
     return await MongoHelper.getCollection('users').find().toArray()

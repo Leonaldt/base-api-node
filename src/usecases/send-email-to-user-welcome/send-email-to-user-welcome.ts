@@ -8,7 +8,7 @@ import { User } from '../../entities/user/user'
 import { InvalidNameError } from '../../entities/user/errors/invalid-name'
 import { InvalidEmailError } from '../../entities/user/errors/invalid-email'
 
-export class SendEmailToUserWithBonus implements SendEmail {
+export class SendEmailToUserWelcome implements SendEmail {
   private readonly mailService: EmailService
   private readonly mailOptions: EmailOptions
   constructor (mailOptions: EmailOptions, mailService: EmailService) {
@@ -16,7 +16,7 @@ export class SendEmailToUserWithBonus implements SendEmail {
     this.mailService = mailService
   }
 
-  async sendEmailToUserWithBonus (userData: UserData): Promise<SendEmailResponse> {
+  async sendEmailToUserWelcome (userData: UserData): Promise<SendEmailResponse> {
     const userOrError: Either<InvalidNameError | InvalidEmailError, User> = User.create(userData)
     if (userOrError.isLeft()) {
       return left(userOrError.value)

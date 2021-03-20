@@ -1,20 +1,19 @@
 import { UserData } from '../../entities/user/user-data'
 import { UserRepository } from '../ports/user-repository'
 import { left, right, Either } from '../../shared/either'
-import { RegisterUser } from './register-user'
 import { RegisterUserResponse } from './register-user-response'
 import { User } from '../../entities/user/user'
 import { InvalidNameError } from '../../entities/user/errors/invalid-name'
 import { InvalidEmailError } from '../../entities/user/errors/invalid-email'
 
-export class RegisterUserOnMailingList implements RegisterUser {
+export class RegisterUser implements RegisterUser {
   private readonly userRepository: UserRepository
 
-  constructor (userRepo: UserRepository) {
+  constructor(userRepo: UserRepository) {
     this.userRepository = userRepo
   }
 
-  async registerUserOnMailingList (userData: UserData): Promise<RegisterUserResponse> {
+  async registerUser(userData: UserData): Promise<RegisterUserResponse> {
     const userOrError: Either<InvalidNameError | InvalidEmailError, User> = User.create(userData)
     if (userOrError.isLeft()) {
       return left(userOrError.value)
@@ -26,4 +25,8 @@ export class RegisterUserOnMailingList implements RegisterUser {
     }
     return right(userData)
   }
+}
+
+export interface RegisterUser {
+  register: (user: UserData) => Promise<RegisterUserResponse>
 }
