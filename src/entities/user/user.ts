@@ -6,16 +6,16 @@ import { Either, left, right } from '../../shared/either'
 import { InvalidNameError } from './errors/invalid-name'
 
 export class User {
-  public readonly name: Name
-  public readonly email: Email
 
-  private constructor (name: Name, email: Email) {
-    this.name = name
-    this.email = email
+  private constructor(
+    readonly name: Name,
+    readonly email: Email,
+    readonly password: string
+  ) {
     Object.freeze(this)
   }
 
-  static create (userData: UserData): Either<InvalidNameError | InvalidEmailError, User> {
+  static create(userData: UserData): Either<InvalidNameError | InvalidEmailError, User> {
     const nameOrError: Either<InvalidNameError, Name> = Name.create(userData.name)
     const emailOrError: Either<InvalidEmailError, Email> = Email.create(userData.email)
     if (nameOrError.isLeft()) {
@@ -26,6 +26,6 @@ export class User {
     }
     const name: Name = nameOrError.value
     const email: Email = emailOrError.value
-    return right(new User(name, email))
+    return right(new User(name, email, userData.password))
   }
 }

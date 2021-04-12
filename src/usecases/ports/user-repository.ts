@@ -5,4 +5,5 @@ export interface UserRepository {
   findUserByEmail: (email: string) => Promise<UserData>
   add: (user: UserData) => Promise<void>
   exists: (email: string) => Promise<boolean>
+  login: (email: string, password: string) => Promise<any>
 }
