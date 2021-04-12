@@ -14,7 +14,7 @@ export class LoginUser implements ILoginUser {
     //     return this.userRepository.login(email, password)
     // }
 
-    async login(email: string, password: string): Promise<UserData> {
+    async perform(email: string, password: string): Promise<UserData> {
 
         const user = this.userRepository.login(email, password)
 

@@ -1,13 +1,13 @@
 import { HttpRequest, HttpResponse } from './ports/http'
-import { MissingParamError } from '../controllers/errors/missing-param-error'
+import { MissingParamError } from './errors/missing-param-error'
 import { badRequest, serverError, ok } from './helpers/http-helper'
 import { LoginUser } from '../../../usecases/login-user/login-user'
 import * as bcrypt from 'bcryptjs'
 import { UserData } from '../../../entities/user/user-data'
 
-export class LoginUserController {
+export class SignInController {
 
-    constructor(private readonly loginUser: LoginUser) { }
+    constructor(private readonly signInUseCase: LoginUser) { }
 
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
 
@@ -18,7 +18,7 @@ export class LoginUserController {
             }
 
             const userData = { email: httpRequest.body.email, password: httpRequest.body.password, }
-            const loginUserResponse: UserData = await this.loginUser.login(userData.email, userData.password)
+            const loginUserResponse: UserData = await this.signInUseCase.perform(userData.email, userData.password)
             
             if (!loginUserResponse) {
                 return badRequest(new MissingParamError('Unable to login'))

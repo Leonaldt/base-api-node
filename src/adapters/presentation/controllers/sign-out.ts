@@ -1,5 +1,5 @@
 import { HttpRequest, HttpResponse } from './ports/http'
-import { MissingParamError } from '../controllers/errors/missing-param-error'
+import { MissingParamError } from './errors/missing-param-error'
 import { badRequest, serverError, ok } from './helpers/http-helper'
 import { RegisterUser } from '../../../usecases/register-user/register-user'
 import { SendEmail } from '../../../usecases/send-email-to-user-welcome/send-email'

@@ -1,4 +1,4 @@
-import { RegisterUserController } from '../../adapters/presentation/controllers/register-user-controller'
+import { RegisterUserController } from '../../adapters/presentation/controllers/sign-out'
 import { RegisterUser } from '../../usecases/register-user/register-user'
 import { MongodbUserRepository } from '../../external/repositories/mongodb/mongodb-user-repository'
 import { NodemailerEmailService } from '../../external/mail-services/nodemailler-email-service'
