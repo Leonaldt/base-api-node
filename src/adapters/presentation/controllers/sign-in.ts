@@ -19,7 +19,7 @@ export class SignInController {
 
             const userData = { email: httpRequest.body.email, password: httpRequest.body.password, }
             const loginUserResponse: UserData = await this.signInUseCase.perform(userData.email, userData.password)
-            
+
             if (!loginUserResponse) {
                 return badRequest(new MissingParamError('Unable to login'))
             }
@@ -29,7 +29,7 @@ export class SignInController {
                 return badRequest(new MissingParamError('Unable to login'))
             }
 
-            return ok(userData)
+            return ok({ id: loginUserResponse._id, name: loginUserResponse.name, email: loginUserResponse.email })
         } catch (error) {
             return serverError('internal')
         }
