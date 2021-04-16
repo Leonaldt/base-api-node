@@ -1,16 +1,15 @@
 import { HttpRequest, HttpResponse } from './ports/http'
-import { MissingParamError } from './errors/missing-param-error'
-import { badRequest, serverError, ok } from './helpers/http-helper'
-import { LoginUser } from '../../../usecases/login-user/login-user'
-import * as bcrypt from 'bcryptjs'
-import { UserData } from '../../../entities/user/user-data'
+import { serverError, ok, badRequest } from './helpers/http-helper'
+import { UserUseCase } from '../../../usecases/user/user'
+import { MissingParamError } from './errors'
+import * as bcrypt from 'bcryptjs';
+import { UserData } from '../../../entities/user/user-data';
 
-export class SignInController {
+export class LoginUserController {
 
-    constructor(private readonly signInUseCase: LoginUser) { }
+    constructor(private readonly userUseCase: UserUseCase) { }
 
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-
         try {
             if (!httpRequest.body.email || !httpRequest.body.password) {
                 const field = !httpRequest.body.email ? 'email' : 'password'
@@ -18,18 +17,18 @@ export class SignInController {
             }
 
             const userData = { email: httpRequest.body.email, password: httpRequest.body.password, }
-            const loginUserResponse: UserData = await this.signInUseCase.perform(userData.email, userData.password)
+            const user: UserData = await this.userUseCase.findUserByEmail(userData.email)
 
-            if (!loginUserResponse) {
+            if (!user) {
                 return badRequest(new MissingParamError('Unable to login'))
             }
 
-            const isMatch = await bcrypt.compare(userData.password, loginUserResponse.password)
+            const isMatch = await bcrypt.compare(userData.password, user.password)
             if (!isMatch) {
                 return badRequest(new MissingParamError('Unable to login'))
             }
 
-            return ok({ id: loginUserResponse._id, name: loginUserResponse.name, email: loginUserResponse.email })
+            return ok({ id: user._id, name: user.name, email: user.email })
         } catch (error) {
             return serverError('internal')
         }
